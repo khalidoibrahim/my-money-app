@@ -15,13 +15,16 @@ All data stays on the device. There are no accounts and no network calls.
 
 ## Download
 
-Get the latest **My-Money.apk** from the [Releases](../../releases) page and open it on an Android phone. Allow "Install unknown apps" when asked.
+Download **[My-Money.apk](download/My-Money.apk)** (tap *View raw* / the download button) and open it on an Android phone running Android 7 or newer. Allow "Install unknown apps" when asked.
+
+The APK is a signed release build that asks for no permissions at all.
 
 ## Built with
 
-HTML, CSS and JavaScript, packaged for Android with [Capacitor](https://capacitorjs.com). Each push to `main` builds the APK automatically with GitHub Actions.
+HTML, CSS and JavaScript, packaged for Android with [Capacitor](https://capacitorjs.com). Each push to `main` builds the release APK with GitHub Actions; it is then signed with the app's release key.
 
 ```
+download/                signed APK
 www/                     the app
 icons/                   launcher icons
 .github/workflows/       APK build
