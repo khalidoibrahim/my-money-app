@@ -61,3 +61,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           cp verify-log.txt /tmp/ && git checkout --orphan verify-log && git rm -rqf . && cp /tmp/verify-log.txt .
           git add verify-log.txt && git commit -qm "verify log" && git push -f origin verify-log
+
+  publish:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace old releases with the signed APK
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          for t in $(gh release list --json tagName --jq '.[].tagName'); do gh release delete "$t" --yes --cleanup-tag; done
+          V=$(node -p "require('./package.json').version")
+          gh release create "v$V" download/My-Money.apk --title "My Money $V" --latest --notes "Signed release build. Download **My-Money.apk** below and open it on an Android phone (Android 7 or newer). The app asks for no permissions and works fully offline."
