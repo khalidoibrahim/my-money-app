@@ -1,0 +1,2 @@
+{ "appId": "com.mymoney.app", "appName": "My Money", "webDir": "www",
+  "android": { "backgroundColor": "#0D1A21" } }
