@@ -1,5 +1,9 @@
 name: Build My Money APK
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['download/**', 'README.md']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -13,7 +17,7 @@ jobs:
         with: { distribution: temurin, java-version: 21 }
       - run: npm install
       - run: npx cap add android
-      - name: App icon, portrait, colours
+      - name: App icon, portrait, permissions, version
         run: |
           R=android/app/src/main/res
           rm -rf $R/mipmap-anydpi-v26
@@ -21,12 +25,32 @@ jobs:
             cp icons/$d.png $R/mipmap-$d/ic_launcher.png
             cp icons/$d-round.png $R/mipmap-$d/ic_launcher_round.png
           done
-          sed -i 's/android:name=".MainActivity"/android:name=".MainActivity" android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
+          M=android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:name=".MainActivity"/android:name=".MainActivity" android:screenOrientation="portrait"/' $M
+          sed -i '/android.permission.INTERNET/d' $M
+          sed -i 's/minSdkVersion = [0-9]*/minSdkVersion = 24/' android/variables.gradle
+          V=$(node -p "require('./package.json').version")
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"$V\"/" android/app/build.gradle
       - run: npx cap sync android
-      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
-      - run: cp android/app/build/outputs/apk/debug/app-debug.apk My-Money.apk
-      - uses: actions/upload-artifact@v4
-        with: { name: My-Money-apk, path: My-Money.apk }
-      - name: Publish release
-        env: { GH_TOKEN: "${{ github.token }}" }
-        run: gh release create "v1.0.${{ github.run_number }}" My-Money.apk --title "My Money ${{ github.run_number }}" --notes "Install My-Money.apk on Android"
+      - run: cd android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon
+      - name: Hand unsigned release APK to the builds branch
+        run: |
+          mkdir /tmp/out && cp android/app/build/outputs/apk/release/app-release-unsigned.apk /tmp/out/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan builds && git rm -rqf . && rm -rf node_modules android
+          cp /tmp/out/app-release-unsigned.apk .
+          git add app-release-unsigned.apk && git commit -qm "Unsigned release build ${{ github.run_number }}"
+          git push -f origin builds
+
+  verify:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify signed APK with apksigner
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          $BT/apksigner verify --verbose --print-certs download/My-Money.apk
+          $BT/zipalign -c -v -p 4 download/My-Money.apk | tail -1
+          $BT/aapt2 dump badging download/My-Money.apk | head -5
