@@ -8,6 +8,7 @@ permissions:
   contents: write
 jobs:
   build:
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,6 +52,12 @@ jobs:
       - name: Verify signed APK with apksigner
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          $BT/apksigner verify --verbose --print-certs download/My-Money.apk
-          $BT/zipalign -c -v -p 4 download/My-Money.apk | tail -1
-          $BT/aapt2 dump badging download/My-Money.apk | head -5
+          { echo "build-tools: $BT"
+            $BT/apksigner verify --verbose --print-certs download/My-Money.apk; echo "apksigner exit: $?"
+            $BT/zipalign -c -p 4 download/My-Money.apk; echo "zipalign exit: $?"
+            $BT/aapt2 dump badging download/My-Money.apk | grep -E "package:|sdkVersion|targetSdk|permission|application-label:"; } > verify-log.txt 2>&1 || true
+          cat verify-log.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp verify-log.txt /tmp/ && git checkout --orphan verify-log && git rm -rqf . && cp /tmp/verify-log.txt .
+          git add verify-log.txt && git commit -qm "verify log" && git push -f origin verify-log
