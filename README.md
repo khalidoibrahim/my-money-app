@@ -15,7 +15,7 @@ All data stays on the device. There are no accounts and no network calls.
 
 ## Download
 
-Download **[My-Money.apk](download/My-Money.apk)** (tap *View raw* / the download button) and open it on an Android phone running Android 7 or newer. Allow "Install unknown apps" when asked.
+Download **My-Money.apk** from the [latest release](../../releases/latest) and open it on an Android phone running Android 7 or newer. Allow "Install unknown apps" when asked.
 
 The APK is a signed release build that asks for no permissions at all.
 
