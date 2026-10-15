@@ -1,0 +1,25 @@
+build-tools: /usr/local/lib/android/sdk/build-tools/37.0.0
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V2 Signer: certificate DN: CN=Khalid Ibrahim, O=My Money, C=BD
+V2 Signer: certificate SHA-256 digest: 4dcddd1d78115466cad593eab425c07f6c2cfe11e995cfbb56b29e0bc42a722c
+V2 Signer: certificate SHA-1 digest: f2ae077bf8314770e8b2a4c20d88f93e207dbae5
+V2 Signer: certificate MD5 digest: 65bd370d6f45b8fd6ddf4239ca09695c
+V2 Signer: key algorithm: RSA
+V2 Signer: key size (bits): 4096
+V2 Signer: public key SHA-256 digest: e1e235087bdb90833484eab10c9498116a12e51930371655e6291a70a5baf34b
+V2 Signer: public key SHA-1 digest: 769f7dd83f65725d64bd9a1c52186c9ade584b9e
+V2 Signer: public key MD5 digest: 7f5002e712aad9251e269d4538c8ae2e
+apksigner exit: 0
+zipalign exit: 0
+package: name='com.mymoney.app' versionCode='3' versionName='1.1.0' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+targetSdkVersion:'34'
+uses-permission: name='com.mymoney.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+application-label:'My Money'
