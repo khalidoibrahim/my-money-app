@@ -1,4 +1,4 @@
 node_modules/
 android/
 *.apk
-!download/My-Money.apk
+*.jks
