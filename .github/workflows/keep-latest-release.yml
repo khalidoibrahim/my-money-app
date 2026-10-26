@@ -1,0 +1,25 @@
+name: Keep only the latest release
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/keep-latest-release.yml']
+  workflow_run:
+    workflows: ["Build and publish Pocket Ledger APK"]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete every release except the latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          LATEST=$(gh release view --json tagName -q .tagName)
+          echo "Keeping $LATEST"
+          for t in $(gh release list --limit 100 --json tagName -q '.[].tagName'); do
+            if [ "$t" != "$LATEST" ]; then echo "Deleting $t"; gh release delete "$t" --yes --cleanup-tag; fi
+          done

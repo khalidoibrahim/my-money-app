@@ -2,7 +2,7 @@ name: Build and publish Pocket Ledger APK
 on:
   push:
     branches: [main]
-    paths-ignore: ['README.md', 'docs/**', '.github/workflows/pages.yml']
+    paths-ignore: ['README.md', 'docs/**', '.github/**']
   workflow_dispatch:
 permissions:
   contents: write
