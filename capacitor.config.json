@@ -1,2 +1,2 @@
-{ "appId": "com.mymoney.app", "appName": "My Money", "webDir": "www",
-  "android": { "backgroundColor": "#0D1A21" } }
+{ "appId": "com.khalid.pocketledger", "appName": "Pocket Ledger", "webDir": "www",
+  "android": { "backgroundColor": "#FAF8FF" } }
