@@ -1,10 +1,10 @@
 {
   "name": "pocket-ledger",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "dependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/cli": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/android": "6.2.0",
+    "@capacitor/cli": "6.2.0",
+    "@capacitor/core": "6.2.0"
   }
 }
